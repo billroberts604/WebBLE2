@@ -14,7 +14,7 @@
 <body>
 <!-- Navigation -->
 <div class="topnav">
-    <h1>ESP32 Web BLE - SENSOR - 13:32</h1>
+    <h1>ESP32 Web BLE - SENSOR - 17:37</h1>
 </div>
 <div class="content">
     <!-- Connect/Disconnect buttons -->
@@ -148,7 +148,7 @@
     var Pm10Data = { labels: [], values: [] };
   
     // Charts
-    function drawChart(canvasId, color, yLabel) {
+    function drawAmbTempChart(canvasId, color, yLabel) {
         return new Chart(document.getElementById(canvasId), {
             type: 'line',
             data: {
@@ -177,7 +177,47 @@
                     },
                     y: {
                         title: { display: true, text: yLabel, font: { size: 11 } },
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        suggestedMin: 15,
+                        suggestedMax: 45
+                    }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+function drawObjTempChart(canvasId, color, yLabel) {
+        return new Chart(document.getElementById(canvasId), {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: yLabel,
+                    borderColor: color,
+                    backgroundColor: color + '18',
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    tension: 0.3,
+                    fill: true,
+                    data: []
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 300 },
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    x: {
+                        ticks: { font: { size: 11 }, maxRotation: 45, autoSkip: true, maxTicksLimit: 10 },
                         grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    y: {
+                        title: { display: true, text: yLabel, font: { size: 11 } },
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        suggestedMin: -35,
+                        suggestedMax: 15
                     }
                 },
                 plugins: { legend: { display: false } }
@@ -185,9 +225,48 @@
         });
     }
 
-    var ambTempChart = drawChart('ambTempChart', '#e07b3a', 'Temperature (°C)');
-    var objTempChart = drawChart('objTempChart', '#e07b3a', 'Temperature (°C)');
-    var Pm25Chart = drawChart('Pm25Chart', '#7c5cbf', 'PM2.5 (ug/m3)');
+  function drawPmTempChart(canvasId, color, yLabel) {
+        return new Chart(document.getElementById(canvasId), {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: yLabel,
+                    borderColor: color,
+                    backgroundColor: color + '18',
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    tension: 0.3,
+                    fill: true,
+                    data: []
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 300 },
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    x: {
+                        ticks: { font: { size: 11 }, maxRotation: 45, autoSkip: true, maxTicksLimit: 10 },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    y: {
+                        title: { display: true, text: yLabel, font: { size: 11 } },
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        suggestedMin: 0,
+                        suggestedMax: 200
+                    }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+  
+    var ambTempChart = drawAmbChart('ambTempChart', '#e07b3a', 'Temperature (°C)');
+    var objTempChart = drawObjChart('objTempChart', '#e07b3a', 'Temperature (°C)');
+    var Pm25Chart = drawPmChart('Pm25Chart', '#7c5cbf', 'PM2.5 (ug/m3)');
 
 
     // Temperature unit toggle
