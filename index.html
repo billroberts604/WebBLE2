@@ -440,8 +440,9 @@ function drawObjTempChart(canvasId, color, yLabel) {
         try {
             const char = await service.getCharacteristic(uuid);
             console.log(char.uuid);
+            console.log(char.properties);
             storeFn(char);
-            
+           
             char.addEventListener('characteristicvaluechanged', handler);
             console.log('await StartNotifications');
             await char.startNotifications();
