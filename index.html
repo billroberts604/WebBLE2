@@ -14,7 +14,7 @@
 <body>
 <!-- Navigation -->
 <div class="topnav">
-    <h1>ESP32 Web BLE - SENSOR - 08/22/14:14</h1>
+    <h1>ESP32 Web BLE - SENSOR - 08/22/14:59</h1>
 </div>
 <div class="content">
     <!-- Connect/Disconnect buttons -->
@@ -77,6 +77,7 @@
             <div class="sensor-timestamp" id="Pm10Timestamp">No reading</div>
         </div>
     </div>
+  
     <!-- Charts -->
     <div class="charts-section">
         <div class="chart-card">
@@ -138,7 +139,7 @@
     var deviceName    = 'ESP32';
     var bleService    = '0000181a-0000-1000-8000-00805f9b34fb';
     var ambTempCharUUID  = '00002a6e-0001-1000-8000-00805f9b34fb';
-    var MLXTempCharUUID = "00002a6e-0002-1000-8000-00805f9b34fb"
+    var MLXTempCharUUID = '00002a6e-0002-1000-8000-00805f9b34fb';
     var objTempCharUUID  = '00002a6e-0003-1000-8000-00805f9b34fb';
     var Pm25CharUUID = '00002a6e-0025-1000-8000-00805f9b34fb';
     var Pm10CharUUID = '00002a6e-0010-1000-8000-00805f9b34fb';
@@ -500,7 +501,6 @@ function drawObjTempChart(canvasId, color, yLabel) {
         var ts = getTime();
         Pm25Timestamp.textContent = 'Last reading: ' + ts;
         pushPmPoint(Pm25Data, Pm25Chart, ts, parseFloat(val.toFixed(1)));
-     //   Pm25Chart.update();
     }
 
     function handlePm10(event) {
