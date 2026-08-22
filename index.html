@@ -113,20 +113,24 @@
   
     const ambTempValueEl = document.getElementById('ambTempValue');
     const objTempValueEl = document.getElementById('objTempValue');
+    const MLXTempValueEl = document.getElementById('MLXTempValue');
     const Pm25ValueEl = document.getElementById('Pm25Value');
     const Pm10ValueEl = document.getElementById('Pm10Value');
     const ambTempTimestamp = document.getElementById('ambTempTimestamp');
     const objTempTimestamp = document.getElementById('objTempTimestamp');
+    const MLXTempTimestamp = document.getElementById('MLXTempTimestamp');
     const Pm25Timestamp = document.getElementById('Pm25Timestamp');
     const Pm10Timestamp = document.getElementById('Pm10Timestamp');
     const ambTempUnitLabel = document.getElementById('ambTempUnitLabel');
     const objTempUnitLabel = document.getElementById('objTempUnitLabel');
+    const MLXTempUnitLabel = document.getElementById('MLXTempUnitLabel');
 
     // BLE UUIDs
     var deviceName    = 'ESP32';
     var bleService    = '0000181a-0000-1000-8000-00805f9b34fb';
     var ambTempCharUUID  = '00002a6e-0000-1000-8000-00805f9b34fb';
-    var objTempCharUUID  = '00002a6e-0001-1000-8000-00805f9b34fb';
+    var MLXTempCharUUID = "00002a6e-0001-1000-8000-00805f9b34fb"
+    var objTempCharUUID  = '00002a6e-0002-1000-8000-00805f9b34fb';
     var Pm25CharUUID = '00002a6e-0025-1000-8000-00805f9b34fb';
     var Pm10CharUUID = '00002a6e-0010-1000-8000-00805f9b34fb';
 
@@ -134,6 +138,7 @@
     var bleServer;
     var ambTempCharFound;
     var objTempCharFound;
+    var MLXTempCharFound;
     var Pm25CharFound;
     var Pm10CharFound;
     var userDisconnected = false;
@@ -144,6 +149,7 @@
     const MAX_POINTS = 60;
     var ambTempData = { labels: [], valuesC: [], valuesF: [] };
     var objTempData = { labels: [], valuesC: [], valuesF: [] };
+    var MLXTempData = { labels: [], valuesC: [], valuesF: [] };
     var Pm25Data = { labels: [], values: [] };
     var Pm10Data = { labels: [], values: [] };
   
@@ -290,13 +296,19 @@ function drawObjTempChart(canvasId, color, yLabel) {
             : cToF(parseFloat(lastTempC));
     }
 
-    function refreshObjTempDisplay() {
+    function refreshMLXTempDisplay() {
+        if (lastTempC === null) return;
+        MLXTempValueEl.textContent = currentUnit === 'C'
+            ? parseFloat(lastTempC).toFixed(1)
+            : cToF(parseFloat(lastTempC));
+    }
+
+      function refreshObjTempDisplay() {
         if (lastTempC === null) return;
         objTempValueEl.textContent = currentUnit === 'C'
             ? parseFloat(lastTempC).toFixed(1)
             : cToF(parseFloat(lastTempC));
     }
-
     function refreshAmbTempChart() {
         ambTempChart.data.labels = ambTempData.labels;
         ambTempChart.data.datasets[0].data = currentUnit === 'C' ? ambTempData.valuesC : ambTempData.valuesF;
@@ -402,6 +414,7 @@ function drawObjTempChart(canvasId, color, yLabel) {
 
             await subscribeChar(service, ambTempCharUUID, handleambTemp, v => { ambTempCharFound = v; });
             await subscribeChar(service, objTempCharUUID, handleobjTemp, v => { objTempCharFound = v; });
+            await subscribeChar(service, MLXTempCharUUID, handleobjTemp, v => { objTempCharFound = v; });
             await subscribeChar(service, Pm25CharUUID, handlePm25, v => { Pm25CharFound = v; });
             await subscribeChar(service, Pm10CharUUID, handlePm10, v => { Pm10CharFound = v; });
 
@@ -448,7 +461,17 @@ function drawObjTempChart(canvasId, color, yLabel) {
         const valF = parseFloat(cToF(val));
         pushTempPoint(ambTempData, ambTempChart, ts, valC, valF);
     }
-
+    function handleMLXTemp(event) {
+        var val = parseFloat(new TextDecoder().decode(event.target.value));
+        if (isNaN(val)) return;
+        lastTempC = val;
+        refreshMLXTempDisplay();
+        var ts = getTime();
+        MLXTempTimestamp.textContent = 'Last reading: ' + ts;
+        const valC = parseFloat(val.toFixed(1));
+        const valF = parseFloat(cToF(val));
+      //  pushTempPoint(MLXTempData, MLXTempChart, ts, valC, valF);
+    }
     function handleobjTemp(event) {
         var val = parseFloat(new TextDecoder().decode(event.target.value));
         if (isNaN(val)) return;
@@ -495,6 +518,7 @@ function drawObjTempChart(canvasId, color, yLabel) {
         userDisconnected = true;
         const stops = [];
         if (ambTempCharFound) stops.push(ambTempCharFound.stopNotifications().catch(() => {}));
+        if (MLXTempCharFound) stops.push(MLXTempCharFound.stopNotifications().catch(() => {}));
         if (objTempCharFound) stops.push(objTempCharFound.stopNotifications().catch(() => {}));
         if (Pm25CharFound) stops.push(Pm25CharFound.stopNotifications().catch(() => {}));
         if (Pm10CharFound) stops.push(Pm10CharFound.stopNotifications().catch(() => {}));
