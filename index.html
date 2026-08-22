@@ -425,7 +425,7 @@ function drawObjTempChart(canvasId, color, yLabel) {
             await subscribeChar(service, ambTempCharUUID, handleambTemp, v => { ambTempCharFound = v; });
             await subscribeChar(service, objTempCharUUID, handleobjTemp, v => { objTempCharFound = v; });
             await subscribeChar(service, MLXTempCharUUID, handleMLXTemp, v => { MLXTempCharFound = v; });
-            //await subscribeChar(service, Pm10CharUUID, handlePm10, v => { Pm10CharFound = v; });
+            await subscribeChar(service, Pm10CharUUID, handlePm10, v => { Pm10CharFound = v; });
             await subscribeChar(service, Pm25CharUUID, handlePm25, v => { Pm25CharFound = v; });
 
 
@@ -456,6 +456,8 @@ function drawObjTempChart(canvasId, color, yLabel) {
             return char;
         } catch (err) {
             console.warn('Could not subscribe to', uuid, ':', err);
+            console.log(char.uuid);
+            console.log(char.properties);
             throw err;
         }
     }
