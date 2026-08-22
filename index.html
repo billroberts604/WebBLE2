@@ -40,6 +40,15 @@
                 <button class="unit-btn" id="btnF" onclick="setTempUnit('F')">&deg;F</button>
             </div>
         </div>
+
+        <div class="sensor-card MLXTemp">
+            <span class="sensor-icon">&#x1F321;</span>
+            <div class="sensor-label">MLX Temp</div>
+            <div class="sensor-value">
+                <span id="MLXTempValue">--</span><span class="sensor-unit" id="tempUnitLabel">&nbsp;&deg;C</span>
+            </div>
+            <div class="sensor-timestamp" id="MLXTempTimestamp">No reading</div>
+        </div>
       
         <div class="sensor-card objTemp">
             <span class="sensor-icon">&#x1F321;</span>
@@ -414,7 +423,7 @@ function drawObjTempChart(canvasId, color, yLabel) {
 
             await subscribeChar(service, ambTempCharUUID, handleambTemp, v => { ambTempCharFound = v; });
             await subscribeChar(service, objTempCharUUID, handleobjTemp, v => { objTempCharFound = v; });
-            await subscribeChar(service, MLXTempCharUUID, handleobjTemp, v => { objTempCharFound = v; });
+            await subscribeChar(service, MLXTempCharUUID, handleobjTemp, v => { MLXTempCharFound = v; });
             await subscribeChar(service, Pm25CharUUID, handlePm25, v => { Pm25CharFound = v; });
             await subscribeChar(service, Pm10CharUUID, handlePm10, v => { Pm10CharFound = v; });
 
