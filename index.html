@@ -14,9 +14,9 @@
 <body>
 <!-- Navigation -->
 <div class="topnav">
-    <h1>ESP32 Web BLE - SENSOR - 08/23/20:55</h1>
+    <h1>ESP32 Web BLE - SENSOR - 08/24 11:20</h1>
 </div>
-<div class="content">
+<div class="content">L
     <!-- Connect/Disconnect buttons -->
     <div class="connection-card">
         <button id="connectBleButton" class="connectButton">&#x1F4F6;&nbsp; Connect to BLE device</button>
@@ -424,7 +424,7 @@ function drawObjTempChart(canvasId, color, yLabel) {
 
             await subscribeChar(service, ambTempCharUUID, handleambTemp, v => { ambTempCharFound = v; });
             await subscribeChar(service, objTempCharUUID, handleobjTemp, v => { objTempCharFound = v; });
-            await subscribeChar(service, MLXTempCharUUID, handleMLXTemp, v => { MLXTempCharFound = v; });
+            //await subscribeChar(service, MLXTempCharUUID, handleMLXTemp, v => { MLXTempCharFound = v; });
             await subscribeChar(service, Pm25CharUUID, handlePm25, v => { Pm25CharFound = v; });
             await subscribeChar(service, Pm10CharUUID, handlePm10, v => { Pm10CharFound = v; });
 
