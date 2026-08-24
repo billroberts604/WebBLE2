@@ -426,7 +426,7 @@ function drawObjTempChart(canvasId, color, yLabel) {
             await subscribeChar(service, objTempCharUUID, handleobjTemp, v => { objTempCharFound = v; });
             await subscribeChar(service, MLXTempCharUUID, handleMLXTemp, v => { MLXTempCharFound = v; });
             await subscribeChar(service, Pm25CharUUID, handlePm25, v => { Pm25CharFound = v; });
-            //await subscribeChar(service, Pm10CharUUID, handlePm10, v => { Pm10CharFound = v; });
+            await subscribeChar(service, Pm10CharUUID, handlePm10, v => { Pm10CharFound = v; });
 
 
         } catch (err) {
@@ -438,13 +438,16 @@ function drawObjTempChart(canvasId, color, yLabel) {
     async function subscribeChar(service, uuid, handler, storeFn) {
         try {
             const char = await service.getCharacteristic(uuid);
-            console.log(char.uuid);
-            console.log(char.properties);
+            console.log("uuid: ", char.uuid);
+            console.log("properties: ", char.properties);
+            console.log("notify: ", char.properties.notify);
+            console.log("indicate: ", char.properties.indicate);
             storeFn(char);
            
             char.addEventListener('characteristicvaluechanged', handler);
             console.log('await StartNotifications');
             await char.startNotifications();
+            console.log("started");
             
             try {
                 const val = await char.readValue();
@@ -483,7 +486,6 @@ function drawObjTempChart(canvasId, color, yLabel) {
         MLXTempTimestamp.textContent = 'Last reading: ' + ts;
         const valC = parseFloat(val.toFixed(1));
         const valF = parseFloat(cToF(val));
-      //  pushTempPoint(MLXTempData, MLXTempChart, ts, valC, valF);
     }
     function handleobjTemp(event) {
         var val = parseFloat(new TextDecoder().decode(event.target.value));
@@ -512,7 +514,6 @@ function drawObjTempChart(canvasId, color, yLabel) {
         Pm10ValueEl.textContent = val.toFixed(1);
         var ts = getTime();
         Pm10Timestamp.textContent = 'Last reading: ' + ts;
-        // pushPmPoint(Pm10Data, Pm10Chart, ts, parseFloat(val.toFixed(1)));
     }
 
     // Disconnect handlers
